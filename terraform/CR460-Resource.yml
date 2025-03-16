@@ -1,9 +1,9 @@
 # Ce workflow déploie une ressource groupe à partir d'un pipeline dans MS Azure.
-name: 'Terraform Resource Group'
+name: Terraform Resource Group
 on: workflow_dispatch
 defaults:
   run:
-    working-directory: './terraform'
+    working-directory: ./terraform
 
 jobs:
   terraform:
