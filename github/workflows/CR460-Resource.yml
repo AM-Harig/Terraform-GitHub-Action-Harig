@@ -1,5 +1,5 @@
 # Ce workflow déploie une ressource groupe à partir d'un pipeline dans MS Azure.
-name: Terraform Resource Group
+name: Terraform Resource Group workflow
 on: workflow_dispatch
 defaults:
   run:
@@ -16,9 +16,9 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - name: Setup Terraform
-      - uses: hashicorp/setup-terraform@v2
+      - uses: hashicorp/setup-terraform@v1
       - name: List directory
         run: ls -la
 # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
