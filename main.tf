@@ -23,6 +23,15 @@ provider "azurerm" {
 
 }
 
+# Groupe de ressources
+resource "azurerm_resource_group" "CR460-2025" {
+  name     = "CR460-2025"
+  location = "East US"
+}
+output "resource_groupe_name" {
+  value = azurerm_resource_group.CR460-2025.name
+}
+
 # Réseau virtuel
 resource "azurerm_virtual_network" "CR460-2025" {
   name                = "CR460-2025-vnet"
