@@ -23,11 +23,18 @@ provider "azurerm" {
 
 }
 
-# Création de Groupe de ressources
-resource "azurerm_resource_group" "CR460-2025" {
-  name     = "CR460-2025"
-  location = "East US"
+# Réseau virtuel
+resource "azurerm_virtual_network" "CR460-2025" {
+  name                = "CR460-2025-vnet"
+  location            = azurerm_resource_group.CR460-2025.location
+  resource_group_name = azurerm_resource_group.CR460-2025.name
+  address_space       = ["10.0.0.0/16"]
 }
-output "resource_groupe_name" {
-  value = azurerm_resource_group.CR460-2025.name
+
+# Sous-réseau
+resource "azurerm_subnet" "CR460-2025" {
+  name                 = "CR460-2025-subnet"
+  resource_group_name  = azurerm_resource_group.CR460-2025.name
+  virtual_network_name = azurerm_virtual_network.CR460-2025.name
+  address_prefixes     = ["10.0.1.0/24"]
 }
