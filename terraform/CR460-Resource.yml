@@ -1,9 +1,13 @@
-# Ce workflow déploie une ressource groupe à partir d'un pipeline dans MS Azure.
+# Ce workflow déploie un groupe de ressources Azure à partir d'un pipeline GitHub Actions
 name: Terraform Resource Group
-on: workflow_dispatch
+
+# Déclenchement manuel du workflow
+on:
+  workflow_dispatch:
+
 defaults:
   run:
-    working-directory: ./terraform
+    working-directory: ./terraform  # Assurez-vous que ce chemin est correct par rapport à votre repo
 
 jobs:
   terraform:
@@ -16,19 +20,28 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Terraform
-      - uses: hashicorp/setup-terraform@v2
-      - name: List directory
-        run: ls -la
-# Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-      - name: Terraform Init
-        run: terraform init
+    # Étape 1 : Cloner le code du repo
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-# Generates an execution plan for Terraform
-      - name: Terraform Plan
-        run: terraform plan
+    # Étape 2 : Installer Terraform
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.10.5  # (Optionnel) Remplace par ta version désirée
 
-# On push to "main", build or change infrastructure according to Terraform configuration files
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+    # Étape 3 : Lister les fichiers (debug utile)
+    - name: List directory contents
+      run: ls -la
+
+    # Étape 4 : Initialiser Terraform
+    - name: Terraform Init
+      run: terraform init
+
+    # Étape 5 : Générer le plan d'exécution Terraform
+    - name: Terraform Plan
+      run: terraform plan
+
+    # Étape 6 : Appliquer les changements (déploiement)
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
