@@ -17,7 +17,6 @@ terraform {
 provider "azurerm" {
   features {}
 }
-
 # Déploiement d’un container Docker à partir de votre pipeline dans MS Azure
 provider "docker" {
   # host = azurerm_container_registry.acr.login_server
@@ -27,13 +26,11 @@ provider "docker" {
     password = azurerm_container_registry.acr.admin_password
   }
 }
-
 # Groupe de ressources
 resource "azurerm_resource_group" "Docker-CR460-2025" {
   name     = "CR460-2025"
   location = "East US"
 }
-
 resource "docker_registry_image" "Docker-CR460-2025" {
   name = "mcr.microsoft.com/azuredocs/aci-helloworld:latest"
 
@@ -41,9 +38,7 @@ resource "docker_registry_image" "Docker-CR460-2025" {
     context    = "${path.cwd}/absolutePathToContextFolder"
     dockerfile = "Dockerfile"
   }
-
 }
-
 resource "azurerm_container_group" "Docker-CR460-2025" {
   name                = "kaexample-container"
   location            = azurerm_resource_group.Docker-CR460-2025.location
