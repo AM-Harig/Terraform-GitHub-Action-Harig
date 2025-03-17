@@ -7,6 +7,7 @@ terraform {
     key                  = "terraform.tfstate"
   }
   # Définition et configuration du provider Azure
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -16,48 +17,32 @@ terraform {
 }
 provider "azurerm" {
   features {}
-}
-# Déploiement d’un container Docker à partir de votre pipeline dans MS Azure
-provider "docker" {
-  # host = azurerm_container_registry.acr.login_server
-  registry_auth {
-    address  = azurerm_container_registry.acr.login_server
-    username = azurerm_container_registry.acr.admin_username
-    password = azurerm_container_registry.acr.admin_password
-  }
+
 }
 # Groupe de ressources
-resource "azurerm_resource_group" "Docker-CR460-2025" {
+resource "azurerm_resource_group" "CR460-2025" {
   name     = "CR460-2025"
   location = "East US"
 }
-resource "docker_registry_image" "Docker-CR460-2025" {
-  name = "mcr.microsoft.com/azuredocs/aci-helloworld:latest"
-
-  build {
-    context    = "${path.cwd}/absolutePathToContextFolder"
-    dockerfile = "Dockerfile"
-  }
-}
-resource "azurerm_container_group" "Docker-CR460-2025" {
-  name                = "kaexample-container"
-  location            = azurerm_resource_group.Docker-CR460-2025.location
-  resource_group_name = azurerm_resource_group.Docker-CR460-2025.name
-  ip_address_type     = "Public"
-  dns_name_label      = "kavyaaci-label"
+# Déploiement d’un container Docker à partir de votre pipeline dans MS Azure
+resource "azurerm_container_group" "CR460-2025" {
+  name                = "docker-ameur-cr460-container"
+  location            = azurerm_resource_group.CR460-2025.location
+  resource_group_name = azurerm_resource_group.CR460-2025.name
   os_type             = "Linux"
-  container {
-    name   = "hello-world"
-    image  = "mcr.microsoft.com/azuredocs/aci-helloworld:latest"
-    cpu    = "0.5"
-    memory = "1.5"
 
+  container {
+    name   = "docker-ameur-cr460-container"
+    image  = "mcr.microsoft.com/oss/nginx/nginx:1.9.15-alpine"
+    cpu    = "1"
+    memory = "1.5"
     ports {
-      port     = 443
+      port     = 80
       protocol = "TCP"
     }
   }
-  tags = {
-    environment = "testing"
-  }
+  # Fin Déploiement d’un container Docker à partir de votre pipeline dans MS Azure
+  # Adresse IP publique
+  ip_address_type = "Public"
+  dns_name_label  = "cr460-docker-container"
 }
